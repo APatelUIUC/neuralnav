@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/*
+ * Catppuccin Mocha palette
+ * Base:    #1e1e2e   Mantle:  #181825   Crust:   #11111b
+ * Surface0:#313244   Surface1:#45475a   Surface2:#585b70
+ * Text:    #cdd6f4   Subtext0:#a6adc8   Subtext1:#bac2de
+ * Overlay0:#6c7086   Overlay1:#7f849c   Overlay2:#9399b2
+ * Lavender:#b4befe   Blue:    #89b4fa   Sapphire:#74c7ec
+ * Sky:     #89dceb   Teal:    #94e2d5   Green:   #a6e3a1
+ * Yellow:  #f9e2af   Peach:   #fab387   Maroon:  #eba0ac
+ * Red:     #f38ba8   Mauve:   #cba6f7   Pink:    #f5c2e7
+ * Flamingo:#f2cdcd   Rosewater:#f5e0dc
+ */
+
+:root {
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+  --ctp-surface0: #313244;
+  --ctp-surface1: #45475a;
+  --ctp-surface2: #585b70;
+  --ctp-overlay0: #6c7086;
+  --ctp-overlay1: #7f849c;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext0: #a6adc8;
+  --ctp-subtext1: #bac2de;
+  --ctp-lavender: #b4befe;
+  --ctp-blue: #89b4fa;
+  --ctp-sapphire: #74c7ec;
+  --ctp-teal: #94e2d5;
+  --ctp-green: #a6e3a1;
+  --ctp-yellow: #f9e2af;
+  --ctp-peach: #fab387;
+  --ctp-red: #f38ba8;
+  --ctp-mauve: #cba6f7;
+  --ctp-pink: #f5c2e7;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-rosewater: #f5e0dc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background-color: var(--ctp-base);
+  color: var(--ctp-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ctp-mantle);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ctp-surface2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ctp-overlay0);
+}
+
+/* Canvas tooltip */
+.heatmap-tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: var(--ctp-surface0);
+  border: 1px solid var(--ctp-surface2);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--ctp-text);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  white-space: nowrap;
+}
+
+/* Skeleton animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--ctp-surface0) 25%,
+    var(--ctp-surface1) 50%,
+    var(--ctp-surface0) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* Progress bar fill animation */
+@keyframes progress-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--ctp-mauve);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--ctp-mauve), 0 0 40px rgba(203, 166, 247, 0.3);
+  }
+}
+
+.progress-bar-fill {
+  animation: progress-glow 2s ease-in-out infinite;
+}

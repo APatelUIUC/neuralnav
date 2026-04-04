@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.local
+*.onnx
+*.npz
+*.npy
+__pycache__/
+*.pyc
+.venv/
+.ruff_cache/
+apps/server/data/sae_weights/
+apps/server/data/feature_labels/
+models/

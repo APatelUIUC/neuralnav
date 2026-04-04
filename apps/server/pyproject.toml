@@ -1,0 +1,16 @@
+[project]
+name = "sae-explorer-api"
+version = "0.1.0"
+description = "FastAPI server for SAE feature exploration"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "numpy>=1.26.0",
+    "pydantic>=2.0.0",
+    "tiktoken>=0.7.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"

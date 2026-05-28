@@ -84,4 +84,16 @@ python -c "import torch; print('CUDA:', torch.cuda.is_available())"   # must pri
 - Handing the RL stage to super (4080). RL script: `train_rl.py` (GRPO, reward=recon cosine).
 - Open question for super: does higher-LR / more-epoch warm-start lift FVE, and does RL push explanations beyond SAE-label paraphrase?
 
+### 2026-05-28 (later) — akashmac
+- Warm-start AV finished. Generations are SAE-label *style* but **generic/repetitive and
+  often wrong** (e.g. target "authors collaborating" → got "names of individuals; names of
+  individuals"). Confirms warm-start ≈ a weak SAE paraphraser. AR FVE ≈ 0.09.
+- Validated `train_rl.py` runs end-to-end on MPS (no bugs). **Fixed the reward**: was raw
+  cosine (~0.7, inflated by GPT-2 anisotropy); now **mean-centered** cosine → starts ~0,
+  real dynamic range for GRPO. Pull to get this fix.
+- MPS step time ~0.6s at batch2×k4×16tok (warmup ~7s). Full batch8×k8×24tok will be larger —
+  **super: run `train_rl.py --benchmark 20` for the real CUDA number.**
+- Likely levers for super, in order: (1) more/higher-LR warm-start, (2) RL with the fixed
+  reward, (3) if FVE stays low, switch warm-start targets from SAE labels to teacher summaries.
+
 ### (super, append below)

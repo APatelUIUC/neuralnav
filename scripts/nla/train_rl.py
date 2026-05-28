@@ -86,7 +86,8 @@ def main():
     ar.load_state_dict(ckpt["state_dict"])
 
     acts = torch.tensor(np.load(OUT / "activations.npy"), dtype=torch.float32, device=device)
-    dtype = next(av.parameters()).dtype
+    mu = acts.mean(0)  # GPT-2 residual streams are anisotropic; center the reward so
+    dtype = next(av.parameters()).dtype  # cosine reflects the informative direction, not the shared offset
 
     opt_av = torch.optim.AdamW(av.parameters(), lr=args.lr)
     opt_ar = torch.optim.AdamW(ar.parameters(), lr=args.ar_lr)
@@ -118,9 +119,9 @@ def main():
             ar_idx = torch.arange(L, device=device).unsqueeze(0)
             mask = (ar_idx <= first_eos.unsqueeze(1)).float()
 
-            # 2. reward = reconstruction cosine (AR reads the generated text)
+            # 2. reward = mean-centered reconstruction cosine (AR reads the generated text)
             recon = ar(gen)                                                # [K, 768]
-            reward = F.cosine_similarity(recon, act.unsqueeze(0).expand(args.k, -1), dim=-1)
+            reward = F.cosine_similarity(recon - mu, (act - mu).unsqueeze(0).expand(args.k, -1), dim=-1)
             adv = (reward - reward.mean()) / (reward.std() + 1e-6)
 
             # 3. policy gradient + KL to warm-start ref

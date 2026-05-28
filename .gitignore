@@ -12,3 +12,8 @@ __pycache__/
 apps/server/data/sae_weights/
 apps/server/data/feature_labels/
 models/
+
+# NLA: large trained models (regenerate locally from the committed dataset)
+scripts/nla/out/av/
+scripts/nla/out/av_rl/
+*.pt

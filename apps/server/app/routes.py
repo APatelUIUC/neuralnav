@@ -50,6 +50,16 @@ class AblateResponse(BaseModel):
     logit_diff_approx: dict
 
 
+class ExplainRequest(BaseModel):
+    activation: list[float] = Field(..., min_length=768, max_length=768)
+    layer: int = Field(..., ge=0, le=11)
+
+
+class ExplainResponse(BaseModel):
+    description: str
+    reconstruction_cosine: float
+
+
 # --- Endpoints ---
 
 
@@ -142,6 +152,22 @@ async def ablate(req: AblateRequest, request: Request) -> AblateResponse:
         modified_activation=[round(float(v), 6) for v in modified],
         logit_diff_approx=logit_diff,
     )
+
+
+@router.post("/explain", response_model=ExplainResponse)
+async def explain(req: ExplainRequest, request: Request) -> ExplainResponse:
+    """Verbalize an activation with the NLA and report reconstruction faithfulness."""
+    nla = getattr(request.app.state, "nla", None)
+    if nla is None:
+        raise HTTPException(
+            status_code=503,
+            detail="NLA not loaded — train the verbalizer + reconstructor first "
+                   "(scripts/nla/train_av.py, train_ar.py).",
+        )
+    from .nla import explain as run_explain
+
+    description, cosine = run_explain(nla, req.activation)
+    return ExplainResponse(description=description, reconstruction_cosine=round(cosine, 4))
 
 
 def _cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:

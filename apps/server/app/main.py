@@ -32,6 +32,21 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     app.state.layer_weights = layer_weights
     app.state.W_U = W_U
 
+    # NLA (optional): loads only if trained models + torch are present.
+    app.state.nla = None
+    try:
+        from pathlib import Path
+
+        from .nla import load_nla
+
+        nla_out = Path(os.environ.get(
+            "NLA_OUT_DIR", Path(__file__).resolve().parents[3] / "scripts" / "nla" / "out"))
+        app.state.nla = load_nla(nla_out / "av", nla_out / "ar.pt")
+        print("NLA loaded — /explain enabled" if app.state.nla
+              else "NLA models not found — /explain disabled until trained")
+    except ImportError:
+        print("torch/transformers not installed in server env — /explain disabled")
+
     yield
 
 

@@ -102,4 +102,10 @@ python -c "import torch; print('CUDA:', torch.cuda.is_available())"   # must pri
 - **400-step RL run: mean-centered reward 0.035 → 0.213 (~6×)**, clear upward trend (noisy; KL high ~8–21). Saved `out/av_rl`, `out/ar_rl.pt`.
 - **OPEN / next:** reward↑ does NOT prove meaningfulness — AV+AR co-train, could be steganographic collusion. Validate via (a) eyeball gens (`compare_gens.py`), (b) the independent-decoder test (train a FRESH AR on the AV's text; if FVE holds, no collusion). Also consider higher beta (KL is high) and teacher-summary warm-start.
 
+### 2026-05-29 (later) — super: steganography test PASSED
+- Independent-decoder test (`steg_test.py`): froze RL'd AV, trained a FRESH AR from scratch on its generations.
+  **co-trained ar_rl FVE 0.149 vs fresh independent FVE 0.142 (ratio 0.95)** → RL gain is REAL, not AV↔AR collusion. The info is in the words.
+- Caveat: absolute faithfulness is modest (~0.14 on the AV's generic generations, vs 0.275 warm-start AR on the richer SAE-label *targets*). Bottleneck = the 124M verbalizer producing generic/repetitive text, NOT collusion.
+- Next levers for better explanations (not faithfulness-gaming): bigger verbalizer, teacher-summary warm-start (richer targets), anti-repetition decoding, more RL. Steganography is ruled out as the explanation for the RL gain.
+
 ### (super, append below)

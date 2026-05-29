@@ -96,4 +96,10 @@ python -c "import torch; print('CUDA:', torch.cuda.is_available())"   # must pri
 - Likely levers for super, in order: (1) more/higher-LR warm-start, (2) RL with the fixed
   reward, (3) if FVE stays low, switch warm-start targets from SAE labels to teacher summaries.
 
+### 2026-05-29 — super (RTX 4080, driven from akashmac over SSH)
+- Higher LR (1e-4) + 8 epochs lifted **warm-start AR FVE 0.088 → 0.275** (still climbing) — the MPS run was just undertrained.
+- **RL benchmark: 1.49 s/step** (8×8 rollouts), full 400-step run ≈ 10 min on CUDA (vs ½–2 days on MPS).
+- **400-step RL run: mean-centered reward 0.035 → 0.213 (~6×)**, clear upward trend (noisy; KL high ~8–21). Saved `out/av_rl`, `out/ar_rl.pt`.
+- **OPEN / next:** reward↑ does NOT prove meaningfulness — AV+AR co-train, could be steganographic collusion. Validate via (a) eyeball gens (`compare_gens.py`), (b) the independent-decoder test (train a FRESH AR on the AV's text; if FVE holds, no collusion). Also consider higher beta (KL is high) and teacher-summary warm-start.
+
 ### (super, append below)
